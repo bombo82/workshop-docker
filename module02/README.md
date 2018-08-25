@@ -7,7 +7,7 @@ Concetti in questo modulo:
 - Tag delle immagini
 
 Nel precedente modulo abbiamo visto come scarciare un'immagine dal _Docker Store_ ed eseguirla.
-Come un'immagine in esecuzione viene chiamata __container__ e come questa contenga un ambiente isolato dagli altri container e come le modifiche all'interno dei container non influiscano con l'imamgine usate per istanziarli.
+Scoperto che l'instanza di un'immagine in esecuzione prende il nome di __container__ e come questa contenga un ambiente isolato dagli altri container e che le modifiche all'interno dei container non influiscano con l'imamgine usata per istanziarli.
 
 Tutto questo è molto utile, ma è necessario un modo per creare le nostre immagini, configurale per le nostre esigenze e installare al loro interno le nostre applicazioni.
 In questo modulo vediamo come creare le nostre immagini docker personalizzate.
@@ -45,7 +45,7 @@ ubuntu                               latest              113a43faa138        2 w
 ```
 Prima di procedere facciamo due considerazioni:
 * la colonna IMAGE ID riporta solo i primi 12 caratteri dell'hashcode dell'immagine, mentre il comando di commit ce li mostra tutti. In generale, bastano i primi caratteri per identificare un immagine, un container e qualsiasi altro _oggetto_ gestito da docker;
-* le colonne REPOSITORY e TAG riportano il valore _<none>_. Questo significa semplicemente che la nostra immagine non ha nome e versione.
+* le colonne REPOSITORY e TAG riportano il valore `<none>`. Questo significa semplicemente che la nostra immagine non ha nome e versione.
 
 Avere delle immagini senza nome e senza versione non è molto utile... ok, possiamo farne a meno perché tutte le immagini hanno un ID univoco, ma non è molto comodo!
 Procediamo assegnando un nome e una versione alla nostra immagine.
@@ -190,7 +190,7 @@ Non tutti i layer creati durante la build vengono committati, alcuni sono tempor
 
 Proviamo a modificare il nostro _index.js_ e vediamo come questo influisce sui layer della nostra immagine.
 ```bash
-echo "console.log(\"this is v0.2\");" >> index.js
+bom@princesspenny ~ $ echo "console.log(\"this is v0.2\");" >> index.js
 bom@princesspenny ~ $ docker image build -t hello:v0.2 .
 Sending build context to Docker daemon   16.9kB
 Step 1/5 : FROM alpine

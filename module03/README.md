@@ -11,14 +11,16 @@ Questo sarà il nostro primo container che verrà eseguito in _background_ e che
 
 ## Sito web
 Creiamo una nuova directory chiamata app e al suo interno creiamo il Dockerfile.
-In questo caso partiamo da un'immagine già pronto per il nostro scopo, con al suo interno un webserver pre-installato e configurato.
+In questo caso partiamo da un'immagine già pronta scopo, con al suo interno un webserver pre-installato e configurato.
+
+Iniziamo creando un Dockerfile che definisce il nostro container. Partiamo dall'immagine ufficiale di _nginx_, copiamo al suo interno una pagina html ed esponiamo le porte relative al protocollo HTTP.
 ```dockerfile
 FROM nginx:latest
 COPY index.html /usr/share/nginx/html
 EXPOSE 80 443
 CMD ["nginx", "-g", "daemon off;"]
 ```
- e al suo interno creiamo il file index.html con il seguente codice:
+Ora creiamo il nostro file index.html con il seguente codice:
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +33,7 @@ CMD ["nginx", "-g", "daemon off;"]
 </body>
 </html>
 ```
-Perfetto, ora che abbiamo creato il Dockerfile e la nostra pagina web non ci resta che fare la build dell'immagine e istanziarla.
+Perfetto, ora che abbiamo il Dockerfile e la nostra pagina, web non ci resta che fare la build dell'immagine e avviarla.
 ```bash
 bom@princesspenny ~ $ docker image build -t hello-http:v0.1 app
 Sending build context to Docker daemon   5.12kB
@@ -66,7 +68,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 Il comando ls ci restituisce la lista dei container in esecuzione e vediamo il nostro sito web è up and running, ma se proviamo ad accedere con un browser riceviamo un errore.
 Questo accade perché le porte _esposte_ dal Dockerfile non vengono automaticamente pubblicate.
 
-E' possibile pubblicare le porte usando il flag __-p__ quando facciamo il run e spedificando come mappare le porte, oppure è possibile utilizzare il flag __-P__ per dire a docker di pubblicare tutte le porte esposte con delle porte casuali dell'host.
+E' possibile pubblicare le porte usando il flag __-p__ quando facciamo il run e specificando come mappare le porte, oppure è possibile utilizzare il flag __-P__ per dire a docker di pubblicare tutte le porte esposte con mappandole su delle porte casuali dell'host.
 
 Un'ultima nota... il container attualmente ha un nome casuale. E' possibile assegnare un nome al container quando la mandiamo in esecuzione oppure in un secondo tempo.
 ```bash
@@ -89,10 +91,10 @@ Il concetto dietro i mount point è molto semplice... essi ci forniscono un sist
 Finora abbiamo sempre parlato di un container come un sistema isolato dagli altri container e dal sistema che lo ospita! come mai è necessario creare dei mount point?
 
 In effetti, in produzione ha poco senso avere dei mount point, ma essi possono essere molto utili durante lo sviluppo delle applicazioni.
-Essi ci permettono di modificare dall'esterno dei dati che sono immediatamente disponibili e aggiornati all'interno del container.
+Essi ci permettono di modificare dall'esterno dei dati ed essi saranno immediatamente disponibili e aggiornati all'interno del container.
 Per esempio, un'applicazione può aver bisogno di alcune configurazioni per funzionare.
 
-Modifichiamo la nostra applicazione web, aggiungendo un file js che legge da un file di configurazione il messaggio di saluto da visualizzare.
+Modifichiamo la nostra applicazione web, aggiungendo un JavaScript che legge il messaggio di saluto da visualizzare da un file di configurazione.
 Le modifiche non sono tantissime, ma per comodità è possibile usare il contenuto della folder _app-configurable_ che è già pronto all'uso.
 
 All'inteno della folder trovate i seguenti file:
@@ -135,8 +137,8 @@ bom@princesspenny ~ $ docker container ls
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                         NAMES
 593c3ecdaeec        hello-http-configurable:v0.1   "nginx -g 'daemon of…"   27 seconds ago      Up 27 seconds       0.0.0.0:80->80/tcp, 443/tcp   hello-http-configurable
 ```
-Verifichiamo che il contenitore sia in esecuzione e il risultato della nostra chiamata http.
-In questo momento il file di configurazione non è presente all'interno del container perché il file _.dockerignore__ ha istruito docker per ometterlo durante la creazione dell'imamgine.
+Verifichiamo che il container sia in esecuzione e il risultato della nostra chiamata http.
+Il file di configurazione non è presente all'interno del container perché il file _.dockerignore_ ha istruito docker per ometterlo durante la creazione dell'imamgine.
 Potete controllare eseguendo il seguente comando, oppure eseguendo in modo interattivo una shell all'interno del container.
 ```bash
 bom@princesspenny ~ $ docker container exec hello-http-configurable ls /usr/share/nginx/html/
@@ -144,7 +146,7 @@ bom@princesspenny ~ $ docker container exec hello-http-configurable ls /usr/shar
 index.html
 index.js
 ```
-Finalmente ora possiamo fare il passo conclusivo... aggiungiamo il mount point al comando di run.
+Ora possiamo fare il passo conclusivo... dobbiamo aggiungere un mount point al comando di run, al fine di montare il file di configurazione externo.
 ```bash
 bom@princesspenny ~ $ docker container stop hello-http-configurable
 hello-http-configurable

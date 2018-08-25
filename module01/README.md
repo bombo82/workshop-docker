@@ -19,7 +19,10 @@ Molti di noi hanno un buona confidenza con le VMs e potreste pensare che quello 
 Fondamentalmente questo è abbastanza vero, ma la natura dei container è molto differente da quella delle VM!
 Per il momento possiamo affermare che:
 * una VM è un'astrazione _hardware_: prende risorse fisiche CPU e RAM da un host che lo divide e lo condivide tra diverse macchine virtuali più piccole. Esiste un sistema operativo e un'applicazione in esecuzione all'interno della VM, ma di solito il software di virtualizzazione non ne sa nulla.
-* un container è un'astrazione a livello di _applicazione_: il focus è sul sistema operativo host e sull'applicazione invece che sull'astrazione dell'hardware. Molte persone utilizzano attualmente sia VM che container nei loro ambienti e, di fatto, possono eseguire contenitori all'interno di VM.
+* un container è un'astrazione a livello _software_: il focus è sul sistema operativo host che mette a disposizione risorse ai container. All'interno del container non vi è un sistema operativo in esecuzione, ma solo delle applicazioni.
+L'_engine_ che esegue i container demanda, al sistema operativo host, l'esecuzione delle applicazioni all'interno dei container.
+
+Molte persone utilizzano attualmente sia VM che container nei loro ambienti e, di fatto, possono eseguire container all'interno di VM.
 
 ## Images
 
@@ -54,6 +57,8 @@ Usage:  docker container run [OPTIONS] IMAGE [COMMAND] [ARG...]
 Run a command in a new container
 ```
 
+FIXME: spiegare cosa fa run e che il container è stato fermato. Rimandare all'ultima per le differenze tra run, exec e start
+
 Ma guarda, _run_ esegue un comando all'interno di un nuovo container, non significa avvia il container! allora proviamo con:
 ```bash
 bom@princesspenny ~ $ docker container run alpine ls -l
@@ -78,7 +83,7 @@ drwxr-xr-x   11 root     root           125 Jan  9 19:37 var
 ![Run Details](https://training.play-with-docker.com/images/ops-basics-run-details.svg)
 https://training.play-with-docker.com
 
-E' giunto il momento di Alpine venir salutati da Alpine Linux, che ne dite?
+E' giunto il momento di venir salutati da Alpine Linux, che ne dite?
 ```bash
 bom@princesspenny ~ $ docker container run alpine echo "hello from alpine"
 hello from alpine
@@ -158,14 +163,14 @@ drwxr-xr-x   11 root     root          4096 Jan  9 19:37 var
 ```
 Che fine ha fatto il nostro _hello.txt_ ??
 Come avete già intuito, quando usiamo il comando _run_ viene creato un nuovo container, al suo interno viene eseguito il comando specificato e al termine dell'esecuzione del comando viene terminato anche il container!
-Visualizziamo la lista dei container presenti nel nostro sistema e cerchiamo di capire quale dei nostri container quale di essi continer il file _hello.txt_.
+Visualizziamo la lista dei container presenti nel nostro sistema e cerchiamo di capire quale di essi continer il file _hello.txt_.
 ```bash
 bom@princesspenny ~ $ docker container ls -a
 CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS                            PORTS               NAMES
 7866959f81a5        alpine              "ls -l"             About a minute ago   Exited (0) About a minute ago                         zen_darwin
 95cb77e78511        alpine              "/bin/sh"           2 minutes ago        Exited (127) About a minute ago                       eloquent_proskuriakova
 ```
-Possiamo identificarlo tramite il comando eseguito e l'indicazione di quando è stato creato.
+Riusciamo a identificarlo tramite il comando eseguito e l'indicazione di quando è stato creato.
 Possiamo avviarlo usando il comando __docker container start__ e passandogli il _CONTAINER ID_
 ```bash
 bom@princesspenny ~ $ docker container start 95cb77e78511
@@ -200,6 +205,9 @@ drwxr-xr-x   11 root     root          4096 Jan  9 19:37 var
 Ecco, abbiamo ritrovato il nostro file _hello.txt_ :-)
 ![Container isolation](https://training.play-with-docker.com/images/ops-basics-isolation.svg)
 https://training.play-with-docker.com
+
+## Ma che confusione... run, exec e start
+TODO
 
 ## Riassunto
 Facciamo un breve riassunto dei comandi e delle opzioni finora utilizzate:

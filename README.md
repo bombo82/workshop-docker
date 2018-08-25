@@ -1,5 +1,12 @@
 # Workshop Docker
 
+## Requisiti
+Uno solo e molto ovvio...
+essere in grado di eseguire __docker__.
+Esistono svariate possibilità:
+1. installare docker nativamente sul proprio computer
+2. utilizzare una VM linux con docker installato nativamente
+
 ## Indice
 1. [Modulo 1](./module01/README.md)
 2. [Modulo 2](./module02/README.md)
