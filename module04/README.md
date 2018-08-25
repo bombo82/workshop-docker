@@ -4,10 +4,25 @@ Concetti in questo modulo:
 - alcune best practices
 - alcuni tips and trick
 
-## Container effimeri
-Le immagini definite dai nostri _Dockerfile_ devono generare dei container i effimeri possibile.
+## I nostri container dovrebbero essere...
+### Immutabili
+Si, avete capito bene... __immutabili__ nel senso che dobbiamo applicare il principio _Immatable Infrastructure_ ai nostri container.
+In pratica dobbiamo rispettare le seguenti regole:
+* NON installare nuovi pacchetti
+* NON aggiornare (o retrocedere) pacchetti presenti
+* NON rimuovere pacchetti
+* NON modificare i file di configurazione (interni al container)
+* NON modificare il codice dell'applicazione
+
+__Neanche _Vulnerabilità di Sicurezza_, _piccoli bugfix_ o _Urgenti fix a bug bloccanti_ sono delle motivazioni valide per andare contro a questo principio.__
+
+Le motivazioni? Le trovate in questa presentazione fatta da Jérôme Petazzoni
+[Immutable infrastructure with Docker and containers (GlueCon 2015)](https://www.slideshare.net/jpetazzo/immutable-infrastructure-with-docker-and-containers-gluecon-2015)
+
+### Effimeri
+Le immagini definite dai nostri _Dockerfile_ devono generare dei container effimeri.
 Cosa significa effimero? Semplicemente che dobbiamo poter stoppare e distruggere il container senza alcun problema.
-Una volta ricreato il container, eventualmente da una nuova versione dell'immagine, esso deve sostituire il precedente senza alcun intervento esterno per il set up e le configurazioni.
+Una volta creato un nuovo container dalla stessa immagine, eventualmente da una nuova versione, esso deve sostituire il precedente senza alcun intervento esterno per il set up e le configurazioni.
 
 Possiamo ottenere questo comportamento usando questi accorgimenti:
 * evitare di salvare i dati all'interno del container
@@ -18,7 +33,7 @@ Possiamo ottenere questo comportamento usando questi accorgimenti:
   * repository e.g. git
   * file di configurazione esterni, passati al container tramite apposite istruzioni
 
-## Container minimali
+### Minimali
 In generale, è buona norma avere solo il minimo necessario per eseguire l'applicazione.
 Questo è un elenco di buone pratiche valido per creare dei Dockerfile efficienti:
 * usare .dockerignore per escludere i file e le directory che non ci servono all'interno del container, ma senza sconvolgere la struttura del repository dei sorgenti
@@ -27,7 +42,8 @@ Questo è un elenco di buone pratiche valido per creare dei Dockerfile efficient
 * suddividere i comandi inseriti nei __RUN__ su più righe e ordinarli alfabeticamente (ove possibile). Questo piccolo accorgimento rende più ordinato il Dockerfile e ci aiuta a identificare le duplicazioni del codice
 * ordinare i comandi dal più generico a quello più specifico... questo ci permette di sfruttare la cache e riusare i layer tra differenti immagini
 
-## ADD vs COPY
+## Dockerfile
+### ADD vs COPY
 Il funzionamento è molto simile e in generale è preferibile usare __COPY__, perché ha un comportamento più trasparente rispetto all'istruzione __ADD__.
 __COPY__ permette solamente di copiare file o directory locali all'interno dell'immagine; mentre, __ADD__ ha delle funzionalità aggiuntive quali decomprimere archivi compressi e il supporto agli URL remoti.
 Queste funzionalità aggiuntive dell'istruzione __ADD__ la rendono poco immediata e a volte il risultato atteso è differente da quello reale... soprattutto all'inizio!
@@ -51,11 +67,11 @@ RUN mkdir -p /usr/src/things \
     && make -C /usr/src/things all
 ```
 
-## ENTRYPOINT vs CMD
-Spesso vengono considerati la stessa cosa e non esiste nulla di più sbagliato!
+### ENTRYPOINT vs CMD
+__Spesso vengono considerati la stessa cosa e non esiste nulla di più sbagliato!__
 Le due istruzioni hanno un significato e un comportamento completamente differente, anche se in alcuni casi otteniamo lo stesso risultato.
 
-### CMD
+#### CMD
 Ha tre differenti forme sintattiche (andiamo bene):
 1. __CMD ["executable","param1","param2"]__ _exec form, this is the preferred form_
 2. __CMD ["param1","param2"]__ _as default parameters to ENTRYPOINT_
@@ -128,7 +144,7 @@ drwxr-xr-x   11 root     root          4096 Jan  9 19:37 var
 
 ```
 
-### ENTRYPOINT
+#### ENTRYPOINT
 Ha solo due differenti forme:
 * __ENTRYPOINT ["executable", "param1", "param2"]__ _exec form, preferred_
 * __ENTRYPOINT command param1 param2__ _shell form_
@@ -137,7 +153,7 @@ Questa istruzione definisce un eseguibile (binario o script) che verrà eseguito
 Potremmo dire che ___ENTRYPOINT__ rende un container un file eseguibile_ e in realtà il comportamento è molto simile.
 
 L'istruzione __ENTRYPOINT__ viene utilizzata principalmente per inizializzare il container ed eseguire delle applicazioni come se fossero dei servizi.
-Le immagini docker ufficiali di _redis_, _postgres_, _mondo_ e molte altre utilizzano proprio un __ENTRYPOINT__ con uno specifico script di inizializzazione per avviare il servizio e __CMD__ per definire dei parametri di default.
+Le immagini docker ufficiali di _redis_, _postgres_, _mongo_ e molte altre, utilizzano proprio un __ENTRYPOINT__ con uno specifico script di inizializzazione per avviare il servizio e __CMD__ per definire dei parametri di default.
 
 Tramite _docker container run_ possiamo passare dei parametri che verranno concatenati a quelli presenti nell'istruzione __ENTRYPOINT__, ma non possiamo passare un comando eseguibile.
 ```dockerfile
@@ -187,7 +203,7 @@ Send ICMP ECHO_REQUEST packets to network hosts
                         and when finished
         -p              Pattern to use for payload
 ```
-### Combinare ENTRYPOINT e CMD
+#### Combinare ENTRYPOINT e CMD
 Come diretta conseguenza di quanto detto sopra potremmo combinare __ENTRYPOINT__ e __CMD__.
 L'istruzione __ENTRYPOINT__  è utilizzabile per definire l'eseguibile da lanciare all'interno del container e tramite __CMD__ e _docker container run_ possiamo passare i parametri necessari alla sua esecuzione.
 
