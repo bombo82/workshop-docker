@@ -57,9 +57,8 @@ Usage:  docker container run [OPTIONS] IMAGE [COMMAND] [ARG...]
 Run a command in a new container
 ```
 
-FIXME: spiegare cosa fa run e che il container è stato fermato. Rimandare all'ultima per le differenze tra run, exec e start
-
-Ma guarda, _run_ esegue un comando all'interno di un nuovo container, non significa avvia il container! allora proviamo con:
+Ma guarda, _run_ esegue un comando all'interno di un nuovo container...
+non si limita ad avviare il container! Allora proviamo con:
 ```bash
 bom@princesspenny ~ $ docker container run alpine ls -l
 total 8
@@ -207,7 +206,13 @@ Ecco, abbiamo ritrovato il nostro file _hello.txt_ :-)
 https://training.play-with-docker.com
 
 ## Ma che confusione... run, exec e start
-TODO
+In questo modulo abbiamo visto i comandi:
+* _run_: instanzia un container, lo avvia, esegue un comando al suo interno e, al termine dell'esecuzione del comando, ferma il container
+* _exec_: esegue un comando all'interno del container specificato
+* _start_: avvia un container attualmente fermo
+
+Nel [Modulo 5](./module04/README.md), vedremo nel dettaglio cosa fanno e le differenze tra i tre comandi.
+Al momento ci mancano alcune nozioni per comprendere a fondo il loro comportamento.
 
 ## Riassunto
 Facciamo un breve riassunto dei comandi e delle opzioni finora utilizzate:
