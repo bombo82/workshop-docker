@@ -13,6 +13,7 @@ apt-key fingerprint 0EBFCD88
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable"
 apt update
 apt install -y docker-ce
+usermod -G docker vagrant
 
 echo "Installing docker-compose..."
 curl -L https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
