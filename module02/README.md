@@ -2,7 +2,7 @@
 
 Concetti in questo modulo:
 - Creare un'immagine da un container
-- Creare un immagine da un Dockerfile
+- Creare un'immagine da un Dockerfile
 - Image Layers e Cache
 - Tag delle immagini
 
