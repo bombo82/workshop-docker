@@ -79,7 +79,7 @@ Ha tre differenti forme sintattiche (andiamo bene):
 
 Lo scopo principale (forma 1 e 3), è quello di fornire un comando di default da eseguire all'interno del container.
 Se sono presenti più istruzioni __CMD__ l'ultima incontrata vince!
-Se viene passato un comando tramite _docker container run_ quest'ultimo viene eseguito e sovrascrive l'eventuale istrunzione __CMD__ presente nel Dockerfile.
+Se viene passato un comando tramite _docker container run_ quest'ultimo viene eseguito e sovrascrive l'eventuale istruzione __CMD__ presente nel Dockerfile.
 
 Se è definito un __ENTRYPONT__ l'istruzione __CMD__ assume il senso di _parametro di default per l'istruzione __ENTRYPOINT___ (forma 2). 
 
