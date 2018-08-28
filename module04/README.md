@@ -6,7 +6,7 @@ Concetti in questo modulo:
 
 ## I nostri container dovrebbero essere...
 ### Immutabili
-Si, avete capito bene... __immutabili__ nel senso che dobbiamo applicare il principio _Immatable Infrastructure_ ai nostri container.
+Si, avete capito bene... __immutabili__ nel senso che dobbiamo applicare il principio _Immutable Infrastructure_ ai nostri container.
 In pratica dobbiamo rispettare le seguenti regole:
 * NON installare nuovi pacchetti
 * NON aggiornare (o retrocedere) pacchetti presenti
@@ -48,7 +48,7 @@ Il funzionamento è molto simile e in generale è preferibile usare __COPY__, pe
 __COPY__ permette solamente di copiare file o directory locali all'interno dell'immagine; mentre, __ADD__ ha delle funzionalità aggiuntive quali decomprimere archivi compressi e il supporto agli URL remoti.
 Queste funzionalità aggiuntive dell'istruzione __ADD__ la rendono poco immediata e a volte il risultato atteso è differente da quello reale... soprattutto all'inizio!
 
-Quando più passi nel Dockerfile utilizzano file diversi copiati dell'estreno e preferibile copiarli singolarmente con __COPY__, piuttosto che copiare tutta la directory o un archivio.
+Quando più passi nel Dockerfile utilizzano file diversi copiati dell'esterno, è preferibile copiarli singolarmente con __COPY__, piuttosto che copiare tutta la directory o un archivio.
 Ciò garantisce che la cache dei layer per ogni passaggio sia invalidata (forzando la fase di riesecuzione) se i file specificatamente richiesti cambiano e non se cambia uno qualsiasi dei file contenuti nella directory.
 ```dockerfile
 FROM python
