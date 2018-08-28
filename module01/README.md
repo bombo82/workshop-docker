@@ -25,7 +25,6 @@ L'_engine_ che esegue i container demanda, al sistema operativo host, l'esecuzio
 Molte persone utilizzano attualmente sia VM che container nei loro ambienti e, di fatto, possono eseguire container all'interno di VM.
 
 ## Images
-
 L'immagine utilizza per il nostro __hello world__ ci propone di provare a usare un container con ubuntu... io preferisco per svariati motivi preferisco usare [Alpine Linux](http://www.alpinelinux.org/).
 Essa è una distribuzione GNU/Linux molto _leggera_ e di piccole dimensioni che può essere scaricata e avvia in pochi istanti.
 Dato che al suo interno vi è solo il software essenziale, essa è molto utilizzata come base per altre _images_.
