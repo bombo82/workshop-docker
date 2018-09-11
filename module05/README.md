@@ -27,7 +27,7 @@ Il comando __start__ si limita, per davvero, ad avviare uno o più container ed 
 
 Questo comando ha poche opzioni:
 * -a, --attach : redirige lo STDOUT/STDERR e i _signals_
-* -i, --interactive : rediride lo STDIN
+* -i, --interactive : redirige lo STDIN
 La particolarità di questo comando è che esso accetta un elenco di container e li avvia tutti. 
 
 Come comportamento di default il comando _start_ esegue i container in modo __detached__, cioè senza redirect di STDOUT/STDERR, quindi eseguendo un container non vedremo in console alcun messaggio di quello ceh sta accadendo.
