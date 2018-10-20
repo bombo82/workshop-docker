@@ -8,7 +8,7 @@ Concetti in questo modulo:
 ## Eseguiamo il nostro primo container
 Bando alla ciance, la cosa migliore è sporcarci le mani con "Hello World"!
 ```bash
-bom@princesspenny ~ $ docker container run hello-world
+bom@princesspenny ~ $ docker run hello-world
 ```
 Yeah! il nostro primo container saluta il mondo :-)
 
