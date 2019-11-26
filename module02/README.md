@@ -6,15 +6,13 @@ Concetti in questo modulo:
 - Image Layers e Cache
 - Tag delle immagini
 
-Nel precedente modulo abbiamo visto come scarciare un'immagine dal _Docker Store_ ed eseguirla.
-Scoperto che l'instanza di un'immagine in esecuzione prende il nome di __container__ e come questa contenga un ambiente isolato dagli altri container e che le modifiche all'interno dei container non influiscano con l'imamgine usata per istanziarli.
+Nel precedente modulo abbiamo visto come scarciare un'immagine dal _Docker Store_ ed eseguirla, scoperto che l'instanza di un'immagine in esecuzione prende il nome di __container__ e come questa contenga un ambiente isolato dagli altri container e che le modifiche apportate all'interno dei container non influiscano con l'imamgine usata per istanziarli.
 
 Tutto questo è molto utile, ma è necessario un modo per creare le nostre immagini, configurale per le nostre esigenze e installare al loro interno le nostre applicazioni.
 In questo modulo vediamo come creare le nostre immagini docker personalizzate.
 
-
 ## Creazione di un immagine da un container
-In questo esercizio useremo come _ubuntu_ come base per le nostre immagini e come esercizio proviamo a installare al suo interno __figlet__ e lo useremo per disegnare delle scritte in asciiart.
+In questo esercizio useremo _ubuntu_ come base per le nostre immagini e come esercizio proviamo a installare al suo interno __figlet__ e lo useremo per disegnare delle scritte in asciiart.
 Iniziamo con eseguire una bash linux all'interno di un container ubuntu.
 ```bash
 bom@princesspenny ~ $ docker container run -it ubuntu /bin/bash
@@ -78,7 +76,7 @@ cerchiamo di capire meglio come funziona:
 
 Docker crea una collezione con il nome dell'immagine e al suo interno inserisce le immagini da noi create e le deffirenzia per un TAG. Esso normalmente corrisponde alla versione dell'immagine.
 
-Ora possiamo anche capire perhé il comando precedente visualizza il nome dell'imamgine nella colonna REPOSITORY.
+Ora possiamo anche capire perché il comando precedente visualizza il nome dell'immagine nella colonna REPOSITORY.
 In realtà, il nome delle immagini è formato con il riferimento al __Docker Registry__ a cui appartengono e come al solito se omesso viene usato quello di default.
 
 Torniamo al nostro intento iniziale... usare un container per rappresentare in asciiart delle frasi!
@@ -174,7 +172,9 @@ __ATTENZIONE:__ quando lanciamo un container passandogli un comando da eseguire,
 ## Image Layers
 Quando avviamo un'immagine, essa ci appare come un unico _filesystem_ contenente il sistema operativo e la nostra applicazione.
 In realtà le immagini sono formate da più __layer__ e ogni istruzione inserita nel Dockerfile crea un nuovo layer.
-Alcune istruzioni eseguono anche un _commit_ del layer che creano, mentre altre istruzioni non effettuano il commit.
+Alcune istruzioni eseguono anche un _commit_ del layer che creano, mentre altre istruzioni non effettuano il _commit_.
+
+Possiamo utilizzare il comando _history_ per visualizzare tutti i layer che compongono un'immagine, come nell'esempio sotto:
 ```bash
 bom@princesspenny ~ $docker image history hello:v0.1
 IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT

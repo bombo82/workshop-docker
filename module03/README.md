@@ -65,10 +65,10 @@ bom@princesspenny ~ $ docker container ls
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
 3c3e0f553bd0        hello-http:v0.1     "nginx -g 'daemon of…"   11 seconds ago      Up 10 seconds       80/tcp, 443/tcp     agitated_yalow
 ```
-Il comando ls ci restituisce la lista dei container in esecuzione e vediamo il nostro sito web è up and running, ma se proviamo ad accedere con un browser riceviamo un errore.
+Il comando **ls** ci restituisce la lista dei container in esecuzione e vediamo il nostro sito web è up and running, ma se proviamo ad accedere con un browser riceviamo un errore.
 Questo accade perché le porte _esposte_ dal Dockerfile non vengono automaticamente pubblicate.
 
-E' possibile pubblicare le porte usando il flag __-p__ quando facciamo il run e specificando come mappare le porte, oppure è possibile utilizzare il flag __-P__ per dire a docker di pubblicare tutte le porte esposte con mappandole su delle porte casuali dell'host.
+E' possibile pubblicare le porte usando il flag __-p__ quando facciamo il run e specificando come mappare le porte, oppure è possibile utilizzare il flag __-P__ per dire a docker di pubblicare tutte le porte esposte, ma in questo caso verranno mappate su delle porte casuali dell'host.
 
 Un'ultima nota... il container attualmente ha un nome casuale. E' possibile assegnare un nome al container quando la mandiamo in esecuzione oppure in un secondo tempo.
 ```bash

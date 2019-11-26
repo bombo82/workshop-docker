@@ -9,6 +9,28 @@ Concetti in questo modulo:
 Bando alla ciance, la cosa migliore è sporcarci le mani con "Hello World"!
 ```bash
 bom@princesspenny ~ $ docker container run hello-world
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+
+To generate this message, Docker took the following steps:
+ 1. The Docker client contacted the Docker daemon.
+ 2. The Docker daemon pulled the "hello-world" image from the Docker Hub.
+    (amd64)
+ 3. The Docker daemon created a new container from that image which runs the
+    executable that produces the output you are currently reading.
+ 4. The Docker daemon streamed that output to the Docker client, which sent it
+    to your terminal.
+
+To try something more ambitious, you can run an Ubuntu container with:
+ $ docker run -it ubuntu bash
+
+Share images, automate workflows, and more with a free Docker ID:
+ https://hub.docker.com/
+
+For more examples and ideas, visit:
+ https://docs.docker.com/get-started/
+
 ```
 Yeah! il nostro primo container saluta il mondo :-)
 
@@ -18,18 +40,24 @@ https://training.play-with-docker.com
 Molti di noi hanno un buona confidenza con le VMs e potreste pensare che quello che è successo è molto simile a lanciare una VM presa da un repository.
 Fondamentalmente questo è abbastanza vero, ma la natura dei container è molto differente da quella delle VM!
 Per il momento possiamo affermare che:
-* una VM è un'astrazione _hardware_: prende risorse fisiche CPU e RAM da un host che lo divide e lo condivide tra diverse macchine virtuali più piccole. Esiste un sistema operativo e un'applicazione in esecuzione all'interno della VM, ma di solito il software di virtualizzazione non ne sa nulla.
-* un container è un'astrazione a livello _software_: il focus è sul sistema operativo host che mette a disposizione risorse ai container. All'interno del container non vi è un sistema operativo in esecuzione, ma solo delle applicazioni.
+* una VM è un'astrazione _hardware_: prende risorse fisiche CPU e RAM da un host che le divide e le condivide tra diverse macchine virtuali più piccole. **Esiste un sistema operativo e almeno un'applicazione in esecuzione all'interno della VM**, ma di solito il software di virtualizzazione non ne sa nulla.
+* un container è un'astrazione a livello _software_: il focus è sul sistema operativo host che mette a disposizione risorse ai container. **All'interno del container non vi è un sistema operativo in esecuzione,** ma solo delle applicazioni.
 L'_engine_ che esegue i container demanda, al sistema operativo host, l'esecuzione delle applicazioni all'interno dei container.
 
 Molte persone utilizzano attualmente sia VM che container nei loro ambienti e, di fatto, possono eseguire container all'interno di VM.
 
-## Images
+## Images & Containers
 L'immagine utilizzata per il nostro __hello world__ ci propone di provare a usare un container con ubuntu... io preferisco per svariati motivi usare [Alpine Linux](http://www.alpinelinux.org/).
 Essa è una distribuzione GNU/Linux molto _leggera_ e di piccole dimensioni che può essere scaricata e avvia in pochi istanti.
 Dato che al suo interno vi è solo il software essenziale, essa è molto utilizzata come base per altre _images_.
 ```bash
 bom@princesspenny ~ $ docker image pull alpine
+Using default tag: latest
+latest: Pulling from library/alpine
+89d9c30c1d48: Pull complete 
+Digest: sha256:c19173c5ada610a5989151111163d28a67368362762534d8a8121ce95cf2bd5a
+Status: Downloaded newer image for alpine:latest
+docker.io/library/alpine:latest
 ```
 Il comando _pull_ scarica l'immagine richiesta dal __Docker Registry__, che nel nostro caso è [Docker Store](https://store.docker.com/)
 Questo è il repository per le immagini di default ed è anche quello ufficiale.
@@ -39,8 +67,8 @@ Bene, ora che abbiamo scaricato l'immagine _alpine_ dov'è finita?
 bom@princesspenny ~ $ docker image ls
 
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-hello-world         latest              e38bc07ac18e        2 months ago        1.85kB
-alpine              latest              3fd9065eaf02        5 months ago        4.15MB
+hello-world         latest              fce289e99eb9        10 months ago       1.84kB
+alpine              latest              965ea09ff2eb        5 weeks ago         5.55MB
 ```
 
 Proviamo ad eseguirla:
@@ -91,6 +119,7 @@ E se ora provassimo ad eseguire una shell?
 bom@princesspenny ~ $ docker container run alpine /bin/sh
 ```
 mmm, non succede nulla, che sia un bug :-(
+
 Verifichiamo i container attivi:
 ```bash
  bom@princesspenny ~ $ docker container ls
@@ -160,13 +189,13 @@ drwxr-xr-x    7 root     root          4096 Jan  9 19:37 usr
 drwxr-xr-x   11 root     root          4096 Jan  9 19:37 var
 ```
 Che fine ha fatto il nostro _hello.txt_ ??
-Come avete già intuito, quando usiamo il comando _run_ viene creato un nuovo container, al suo interno viene eseguito il comando specificato e al termine dell'esecuzione del comando viene terminato anche il container!
+Come avrete già intuito, quando usiamo il comando _run_ viene creato un nuovo container, al suo interno viene eseguito il comando specificato e al termine dell'esecuzione del comando viene terminato anche il container!
 Visualizziamo la lista dei container presenti nel nostro sistema e cerchiamo di capire quale di essi continer il file _hello.txt_.
 ```bash
 bom@princesspenny ~ $ docker container ls -a
 CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS                            PORTS               NAMES
 7866959f81a5        alpine              "ls -l"             About a minute ago   Exited (0) About a minute ago                         zen_darwin
-95cb77e78511        alpine              "/bin/sh"           2 minutes ago        Exited (127) About a minute ago                       eloquent_proskuriakova
+95cb77e78511        alpine              "/bin/sh"           2 minutes ago        Exited (0) About a minute ago                       eloquent_proskuriakova
 ```
 Riusciamo a identificarlo tramite il comando eseguito e l'indicazione di quando è stato creato.
 Possiamo avviarlo usando il comando __docker container start__ e passandogli il _CONTAINER ID_
