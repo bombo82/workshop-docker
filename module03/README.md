@@ -171,7 +171,28 @@ index.js
 ```
 
 ## Volume
-In docker, un concetto simile a quello dei _bind mount_ è quello dei _volume_. 
+In docker, un concetto simile a quello dei _bind mount_ è quello dei _volume_.
+La differenza principale tra questi 2 concetti è che i _bind mount_ dipendono dalla struttura delle directory del host, mentre i **volumi sono completamente gestiti da docker!**
+I volumi sono il meccanismo principale e **preferito** per persistere i dati generati dai container, per esempio lo _store su filesystem_ dei DBMS, i file allegati/caricati dagli utenti in un'applicazione web.
+
+I principali vantaggi nell'uso sono:
+- è facile creare un backup dei _volume_;
+- i _volume_ possono essere migrati più facilmente rispetto ai _bind mount_;
+- possono essere gestiti tramite "Docker CLI" e le "Docker API";
+- funzionano in modo consistente con container linux che Windows;
+- possono essere condivisi in modo sicuro ed efficiente tra più container, senza "side-effects";
+- i driver usati per accedere ai _volumes_ permettono il salvataggio su host remoti o provider cloud;
+- i driver usati per accedere ai _volumes_ implementano la crittografia nativamente;
+- i driver usati per accedere ai _volumes_ hanno più funzionalità rispetto a quelli dei _bind mount_;
+- i nuovi _volume_ possono essere pre-popolati da un _container_.
+
+Inoltre, i dati scritti nei _volumes_ non incrementano la dimensione dei container e sopravvivono alla ricreazione dei _containers_ che li usano.
+
+usare i _volume_ è una buona soluzione tutte le volte che sentite l'esigenza di avere uno spazio in cui scrivere dei dati tramite il _container_ oppure dovete condividere dati tra più _container_.
+
+**ATTENZIONE:** nella sezione precedente ho affermato che usare i _bind mount_ in _read/write_ è male... ora avete una possibile alternativa a tutte le volte che verrete tentati dal "lato oscuro di Docker", ma ricordate che non è l'unica possibile.
+
+In futuro scriverò un tutorial (o amplierò questo), con alcuni argomenti di livello intermedio, come la gestione delle _network_, dei _volume_ o dei _tmpfs mount_, ma per il momento vi rimando alla documentazione ufficiale [link](https://docs.docker.com/storage/volumes/).
 
 ## Riassunto
 Facciamo un breve riassunto dei comandi e delle opzioni finora utilizzate:
