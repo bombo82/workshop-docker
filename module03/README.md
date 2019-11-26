@@ -3,7 +3,8 @@
 Concetti in questo modulo:
 - Esecuzione dei container in background
 - Bind di porte TCP
-- Mount point
+- Bind Mount
+- Volume
 - .dockerignore file
 
 In questo esercizio vediamo come creare un semplice sito web e come pubblicarlo.
@@ -84,18 +85,20 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 ```
 Ora va molto meglio! Il nostro primo sito web è online.
 
-## Mount point
-Il concetto di _mount point_ dovrebbe essere abbastanza noto, almeno per chi ha dimestichezza con linux.
-Il concetto dietro i mount point è molto semplice... essi ci forniscono un sistema per condividere un filesystem, una directory o un file tra l'host e il container.
+## Bind mount
+Il concetto di _bind mount_ risulta parecchio oscuro per chi non ha dimestichezza con GNU/linux, ma la spiegazione di cosa sia un _bind mount_ devia dallo scopo di questo tutorial, quindi vi rimando a questi oscuri links: [mount point](http://www.linfo.org/mount_point.html) e [bind mount](http://docs.1h.com/Bind_mounts). 
+Contestualizzando i _bind mount_ con docker, potrei affermare che essi ci forniscono un sistema per condividere una partizione del HDD, una directory o un file tra l'host e il container.
 
-Finora abbiamo sempre parlato di un container come un sistema isolato dagli altri container e dal sistema che lo ospita! come mai è necessario creare dei mount point?
+Finora abbiamo sempre parlato di un container come un sistema isolato dagli altri container e dal sistema che lo ospita! come mai è necessario creare dei bind mount?
 
-In effetti, in produzione ha poco senso avere dei mount point, ma essi possono essere molto utili durante lo sviluppo delle applicazioni.
-Essi ci permettono di modificare dall'esterno dei dati ed essi saranno immediatamente disponibili e aggiornati all'interno del container.
-Per esempio, un'applicazione può aver bisogno di alcune configurazioni per funzionare.
+Spesso ha poco senso utilizzare dei _bind mount_, ma essi possono essere molto utili durante lo sviluppo delle applicazioni o per passare le configurazioni alle applicazioni interne al container.
+Essi ci permettono di modificare dei dati esterni al container e renderli disponibili e aggiornati all'interno del container stesso, senza dover creare una nuova immagine.
+Per esempio, un'applicazione può aver bisogno di alcune configurazioni per funzionare e tali configurazioni potrebbe non aver alcune senso inserirle nell'immagine.
 
-Modifichiamo la nostra applicazione web, aggiungendo un JavaScript che legge il messaggio di saluto da visualizzare da un file di configurazione.
-Le modifiche non sono tantissime, ma per comodità è possibile usare il contenuto della folder _app-configurable_ che è già pronto all'uso.
+**ATTENZIONE:** i _bind mount_ possono essere sia _read only_ che _read/write_. Non solo è buona pratica che tutti i _bind mount_ siano **read only**, ma la presenza di _bind mount_ **read/write** è, quasi sempre, sintomo di un _**ERRORE**_ a livello concettuale o architetturale! Prestate molta attenzione quando usate i _bind mount_ e nel caso in cui abbiate la tentazione di crearlo _read/write_ fermatevi e ponetevi delle domande!
+
+Modifichiamo la nostra applicazione web aggiungendo un JavaScript che legge il messaggio di saluto da visualizzare da un file di configurazione.
+Le modifiche non sono tantissime e per comodità è possibile usare il contenuto della folder _app-configurable_ che è già pronto all'uso.
 
 All'inteno della folder trovate i seguenti file:
 * __conf.json__ file di configurazione contenente il messaggio da visualizzare
@@ -146,7 +149,7 @@ bom@princesspenny ~ $ docker container exec hello-http-configurable ls /usr/shar
 index.html
 index.js
 ```
-Ora possiamo fare il passo conclusivo... dobbiamo aggiungere un mount point al comando di run, al fine di montare il file di configurazione externo.
+Ora possiamo fare il passo conclusivo... dobbiamo aggiungere un _bind mount_ al comando di run, al fine di montare il file di configurazione externo.
 ```bash
 bom@princesspenny ~ $ docker container stop hello-http-configurable
 hello-http-configurable
@@ -166,6 +169,9 @@ conf.json
 index.html
 index.js
 ```
+
+## Volume
+In docker, un concetto simile a quello dei _bind mount_ è quello dei _volume_. 
 
 ## Riassunto
 Facciamo un breve riassunto dei comandi e delle opzioni finora utilizzate:
