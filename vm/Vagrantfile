@@ -4,8 +4,8 @@
 VAGRANTFILE_API_VERSION = "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = "ubuntu/xenial64"
-  config.vm.synced_folder "../", "/workshop-docker", mount_options: ["dmode=700,fmode=600"]
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.synced_folder "../", "/workshop-docker", mount_options: ["dmode=775,fmode=664"]
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
     v.cpus = 1
