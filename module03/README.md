@@ -36,7 +36,7 @@ Ora creiamo il nostro file index.html con il seguente codice:
 ```
 Perfetto, ora che abbiamo il Dockerfile e la nostra pagina, web non ci resta che fare la build dell'immagine e avviarla.
 ```bash
-bom@princesspenny ~ $ docker image build -t hello-http:v0.1 app
+bombo82@nolok ~ $ docker image build -t hello-http:v0.1 app
 Sending build context to Docker daemon   5.12kB
 Step 1/4 : FROM nginx:latest
 latest: Pulling from library/nginx
@@ -59,10 +59,10 @@ Removing intermediate container ab1a36732076
 Successfully built 2e9c6e31c481
 Successfully tagged hello-http:v0.1
 
-bom@princesspenny ~ $ docker container run -d hello-http:v0.1
+bombo82@nolok ~ $ docker container run -d hello-http:v0.1
 3c3e0f553bd0deb0f93d71ffa55cafcffc4c59553aa21df835b3d2311b7f919b
 
-bom@princesspenny ~ $ docker container ls
+bombo82@nolok ~ $ docker container ls
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
 3c3e0f553bd0        hello-http:v0.1     "nginx -g 'daemon of…"   11 seconds ago      Up 10 seconds       80/tcp, 443/tcp     agitated_yalow
 ```
@@ -73,13 +73,13 @@ E' possibile pubblicare le porte usando il flag __-p__ quando facciamo il run e 
 
 Un'ultima nota... il container attualmente ha un nome casuale. E' possibile assegnare un nome al container quando la mandiamo in esecuzione oppure in un secondo tempo.
 ```bash
-bom@princesspenny ~ $ docker container stop 3c3e0f553bd0
+bombo82@nolok ~ $ docker container stop 3c3e0f553bd0
 3c3e0f553bd0
 
-bom@princesspenny ~ $ docker container run -d -p 80:80 --name hello-http hello-http:v0.1
+bombo82@nolok ~ $ docker container run -d -p 80:80 --name hello-http hello-http:v0.1
 7fd69dd3c43b298e86bad29f8ac14053796a1501467acb0cbde4858679b39a30
 
-bom@princesspenny ~ $ docker container ls
+bombo82@nolok ~ $ docker container ls
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                         NAMES
 7fd69dd3c43b        hello-http:v0.1     "nginx -g 'daemon of…"   9 seconds ago       Up 8 seconds        0.0.0.0:80->80/tcp, 443/tcp   hello-http
 ```
@@ -109,10 +109,10 @@ All'inteno della folder trovate i seguenti file:
 
 Fermiamo il container del precedente esercizio e poi procedere con la creazione della nuova immagine e la sua esecuzione.
 ```bash
-bom@princesspenny ~ $ docker container stop hello-http
+bombo82@nolok ~ $ docker container stop hello-http
 hello-http
 
-bom@princesspenny ~ $ docker image build -t hello-http-configurable:v0.1 app-configurable
+bombo82@nolok ~ $ docker image build -t hello-http-configurable:v0.1 app-configurable
 Sending build context to Docker daemon  5.632kB
 Step 1/4 : FROM nginx:latest
  ---> cd5239a0906a
@@ -129,14 +129,14 @@ Removing intermediate container fd38cb53775d
 Successfully built 603c5995a28d
 Successfully tagged hello-http-configurable:v0.1
 
-bom@princesspenny ~ $ docker container run \
+bombo82@nolok ~ $ docker container run \
     -d \
     -p 80:80 \
     --name hello-http-configurable \
     hello-http-configurable:v0.1
 593c3ecdaeec5d579d9497500d4ba102ecae6c4f4ccdb7de64a3c0b944c92d22
 
-bom@princesspenny ~ $ docker container ls
+bombo82@nolok ~ $ docker container ls
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS              PORTS                         NAMES
 593c3ecdaeec        hello-http-configurable:v0.1   "nginx -g 'daemon of…"   27 seconds ago      Up 27 seconds       0.0.0.0:80->80/tcp, 443/tcp   hello-http-configurable
 ```
@@ -144,27 +144,27 @@ Verifichiamo che il container sia in esecuzione e il risultato della nostra chia
 Il file di configurazione non è presente all'interno del container perché il file _.dockerignore_ ha istruito docker per ometterlo durante la creazione dell'imamgine.
 Potete controllare eseguendo il seguente comando, oppure eseguendo in modo interattivo una shell all'interno del container.
 ```bash
-bom@princesspenny ~ $ docker container exec hello-http-configurable ls /usr/share/nginx/html/
+bombo82@nolok ~ $ docker container exec hello-http-configurable ls /usr/share/nginx/html/
 50x.html
 index.html
 index.js
 ```
 Ora possiamo fare il passo conclusivo... dobbiamo aggiungere un _bind mount_ al comando di run, al fine di montare il file di configurazione externo.
 ```bash
-bom@princesspenny ~ $ docker container stop hello-http-configurable
+bombo82@nolok ~ $ docker container stop hello-http-configurable
 hello-http-configurable
 
-bom@princesspenny ~ $ docker container rm hello-http-configurable
+bombo82@nolok ~ $ docker container rm hello-http-configurable
 hello-http-configurable
 
-bom@princesspenny ~ $ docker container run \
+bombo82@nolok ~ $ docker container run \
     -d \
     -p 80:80 \
     --name hello-http-configurable \
     --mount type=bind,source="$(pwd)"/app-configurable/conf.json,target=/usr/share/nginx/html/conf.json,readonly \
     hello-http-configurable:v0.1
 
-bom@princesspenny ~ $ docker container exec hello-http-configurable ls /usr/share/nginx/html/50x.html
+bombo82@nolok ~ $ docker container exec hello-http-configurable ls /usr/share/nginx/html/50x.html
 conf.json
 index.html
 index.js

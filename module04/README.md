@@ -91,7 +91,7 @@ CMD ["ping", "localhost"]
 ```
 
 ```bash
-bom@princesspenny ~ $ docker image build -f esempi/Dockerfile-cmd -t ping:cmd esempi
+bombo82@nolok ~ $ docker image build -f esempi/Dockerfile-cmd -t ping:cmd esempi
 Sending build context to Docker daemon  2.048kB
 Step 1/2 : FROM alpine
 latest: Pulling from library/alpine
@@ -109,7 +109,7 @@ Successfully tagged ping:cmd
 
 Proviamo ad eseguire il container senza passare un comando esterno:
 ```bash
-bom@princesspenny ~ $ docker container run ping:cmd
+bombo82@nolok ~ $ docker container run ping:cmd
 PING localhost (127.0.0.1): 56 data bytes
 64 bytes from 127.0.0.1: seq=0 ttl=64 time=0.043 ms
 64 bytes from 127.0.0.1: seq=1 ttl=64 time=0.058 ms
@@ -121,7 +121,7 @@ round-trip min/avg/max = 0.043/0.050/0.058 ms
 
 Come ci aspettavamo è stato eseguito il comando _ping_ verso l'host _localhost_. Ora proviamo a passare alcuni comandi e vediamo cosa accade:
 ```bash
-bom@princesspenny ~ $ docker container run ping:cmd ping www.google.it
+bombo82@nolok ~ $ docker container run ping:cmd ping www.google.it
 PING www.google.it (172.217.19.131): 56 data bytes
 64 bytes from 172.217.19.131: seq=0 ttl=52 time=30.429 ms
 64 bytes from 172.217.19.131: seq=1 ttl=52 time=30.695 ms
@@ -130,7 +130,7 @@ PING www.google.it (172.217.19.131): 56 data bytes
 2 packets transmitted, 2 packets received, 0% packet loss
 round-trip min/avg/max = 30.429/30.562/30.695 ms
 
-bom@princesspenny ~ $ docker container run ping:cmd ls -l
+bombo82@nolok ~ $ docker container run ping:cmd ls -l
 total 52
 drwxr-xr-x    2 root     root          4096 Jan  9 19:37 bin
 drwxr-xr-x    5 root     root           340 Jun 24 18:10 dev
@@ -171,7 +171,7 @@ ENTRYPOINT ["ping", "localhost"]
 ```
 
 ```bash
-bom@princesspenny ~ $ docker image build -f esempi/Dockerfile-entrypoint -t ping:entrypoint esempi
+bombo82@nolok ~ $ docker image build -f esempi/Dockerfile-entrypoint -t ping:entrypoint esempi
 Sending build context to Docker daemon  3.072kB
 Step 1/2 : FROM alpine
  ---> 3fd9065eaf02
@@ -185,7 +185,7 @@ Successfully tagged ping:entrypoint
 
 Proviamo ad eseguire il container senza passare un comando esterno:
 ```bash
-bom@princesspenny ~ $ docker container run ping:entrypoint
+bombo82@nolok ~ $ docker container run ping:entrypoint
 PING localhost (127.0.0.1): 56 data bytes
 64 bytes from 127.0.0.1: seq=0 ttl=64 time=0.048 ms
 64 bytes from 127.0.0.1: seq=1 ttl=64 time=0.049 ms
@@ -197,7 +197,7 @@ round-trip min/avg/max = 0.048/0.048/0.049 ms
 
 Come vi aspettavamo è stato eseguito il comando _ping_ verso l'host _localhost_. Ora proviamo a passare alcuni comandi e vediamo cosa accade:
 ```bash
-bom@princesspenny ~ $ docker container run ping:entrypoint ls -l
+bombo82@nolok ~ $ docker container run ping:entrypoint ls -l
 ping: unrecognized option: l
 BusyBox v1.27.2 (2017-12-12 10:41:50 GMT) multi-call binary.
 
@@ -232,7 +232,7 @@ ENTRYPOINT ["ping", "-c", "3"]
 CMD ["localhost"]
 ```
 ```bash
-bom@princesspenny ~ $ docker image build -t ping:combined esempi
+bombo82@nolok ~ $ docker image build -t ping:combined esempi
 Sending build context to Docker daemon  4.096kB
 Step 1/3 : FROM alpine
  ---> 3fd9065eaf02
@@ -250,7 +250,7 @@ Successfully tagged ping:combined
 
 Proviamo ad eseguire il container senza passare un comando esterno:
 ```bash
-bom@princesspenny ~ $ docker container run ping:combined
+bombo82@nolok ~ $ docker container run ping:combined
 PING localhost (127.0.0.1): 56 data bytes
 64 bytes from 127.0.0.1: seq=0 ttl=64 time=0.047 ms
 64 bytes from 127.0.0.1: seq=1 ttl=64 time=0.059 ms
@@ -263,7 +263,7 @@ round-trip min/avg/max = 0.047/0.054/0.059 ms
 
 Niente di nuovo, continua a funzionare tutto come in precedenza! Ora passiamo un nome host differente come parametro.
 ```bash
-bom@princesspenny ~ $ docker container run ping:combined www.google.it
+bombo82@nolok ~ $ docker container run ping:combined www.google.it
 PING www.google.it (172.217.19.131): 56 data bytes
 64 bytes from 172.217.19.131: seq=0 ttl=52 time=29.998 ms
 64 bytes from 172.217.19.131: seq=1 ttl=52 time=29.385 ms
@@ -277,7 +277,7 @@ round-trip min/avg/max = 29.385/29.716/29.998 ms
 Avendo combinato **ENTRYPOINT** con **CMD** possiamo lanciare il container con alcuni parametri che andranno a sovrascrivere il contenuto del **CMD**, oppure senza parametri e verranno utilizzati quelli di default definiti dall'istruzione **CMD**.
 Se ora proviamo a lanciare il container con un comando arbitrario, esso verrà interpretato come parametro del **ENTRYPOINT** che abbiamo definito, con il risultato che ci sarà restituito un errore!
 ```bash
-bom@princesspenny ~ $ docker container run ping:combined ls -l
+bombo82@nolok ~ $ docker container run ping:combined ls -l
 ping: unrecognized option: l
 BusyBox v1.27.2 (2017-12-12 10:41:50 GMT) multi-call binary.
 

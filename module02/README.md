@@ -15,7 +15,7 @@ In questo modulo vediamo come creare le nostre immagini docker personalizzate.
 In questo esercizio useremo _ubuntu_ come base per le nostre immagini e come esercizio proviamo a installare al suo interno __figlet__ e lo useremo per disegnare delle scritte in asciiart.
 Iniziamo con eseguire una bash linux all'interno di un container ubuntu.
 ```bash
-bom@princesspenny ~ $ docker container run -it ubuntu /bin/bash
+bombo82@nolok ~ $ docker container run -it ubuntu /bin/bash
 ```
 Ora installiamo __figlet__ e disegnamo la scritta _hello world_.
 ```bash
@@ -26,17 +26,17 @@ root@bac8b86a52b0:/# figlet hello world
 Perfetto! Abbiamo installato _figlet_ nel container e verificato che funziona correttamente.
 Per creare un immagine da un container è necessario conoscere il suo CONTAINER_ID, quindi andiamo alla ricerca del suo ID e poi lanciamo il comando __commit__ per creare una nuova immagine.
 ```bash
-bom@princesspenny ~ $ docker container ls -a
+bombo82@nolok ~ $ docker container ls -a
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS                          PORTS               NAMES
 bac8b86a52b0        ubuntu              "/bin/bash"         4 minutes ago       Exited (0) About a minute ago                       infallible_murdock
 
-bom@princesspenny ~ $ docker container commit bac8b86a52b0
+bombo82@nolok ~ $ docker container commit bac8b86a52b0
 sha256:3d9ef0cc030b5fce9d8244d8243024e3388f70eaa759275572e137285742a7aa
 ```
 Il comando di commit ci restituisce l'_hashcode_ corrispondende all'immagine appena creata...
 verifichiamo visualizzando la lista delle immagini presenti.
 ```bash
-bom@princesspenny ~ $ docker image ls
+bombo82@nolok ~ $ docker image ls
 REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
 <none>                               <none>              3d9ef0cc030b        41 seconds ago      123MB
 ubuntu                               latest              113a43faa138        2 weeks ago         81.2MB
@@ -48,8 +48,8 @@ Prima di procedere facciamo due considerazioni:
 Avere delle immagini senza nome e senza versione non è molto utile... ok, possiamo farne a meno perché tutte le immagini hanno un ID univoco, ma non è molto comodo!
 Procediamo assegnando un nome e una versione alla nostra immagine.
 ```bash
-bom@princesspenny ~ $ docker image tag 3d9ef0cc030b nostro-figlet
-bom@princesspenny ~ $ docker image ls
+bombo82@nolok ~ $ docker image tag 3d9ef0cc030b nostro-figlet
+bombo82@nolok ~ $ docker image ls
 REPOSITORY                           TAG                 IMAGE ID            CREATED             SIZE
 nostro-figlet                        latest              3d9ef0cc030b        12 minutes ago      123MB
 ubuntu                               latest              113a43faa138        2 weeks ago         81.2MB
@@ -57,7 +57,7 @@ ubuntu                               latest              113a43faa138        2 w
 Il risultato è abbastanza curioso e inaspettato... il comando __tag__ ha imspotato sia il REPOSITORY che il TAG.
 Cerchiamo di capire meglio il significato di quello che abbiamo scritto e interpelliamo l'help di docker.
 ```bash
-bom@princesspenny ~ $ docker image tag --help
+bombo82@nolok ~ $ docker image tag --help
 
 Usage:  docker image tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
 
@@ -81,7 +81,7 @@ In realtà, il nome delle immagini è formato con il riferimento al __Docker Reg
 
 Torniamo al nostro intento iniziale... usare un container per rappresentare in asciiart delle frasi!
 ```bash
-bom@princesspenny ~ $ docker container run nostro-figlet figlet hello world
+bombo82@nolok ~ $ docker container run nostro-figlet figlet hello world
  _          _ _                            _     _ 
 | |__   ___| | | ___   __      _____  _ __| | __| |
 | '_ \ / _ \ | |/ _ \  \ \ /\ / / _ \| '__| |/ _` |
@@ -115,7 +115,7 @@ CMD ["node","index.js"]
 ```
 Una volta creati i 2 file in questione non ci resta che lanciare la _build_ dell'imamgine e provare a eseguire un'istanza dell'immagine appena creata.
 ```bash
-bom@princesspenny ~ $ docker image build -t hello:v0.1 .
+bombo82@nolok ~ $ docker image build -t hello:v0.1 .
 Sending build context to Docker daemon  11.26kB
 Step 1/5 : FROM alpine
  ---> 3fd9065eaf02
@@ -153,7 +153,7 @@ Removing intermediate container 6c955a9c5209
 Successfully built 81b4cd5f4dcc
 Successfully tagged hello:v0.1
 
-bom@princesspenny ~ $ docker container run hello:v0.1
+bombo82@nolok ~ $ docker container run hello:v0.1
 hello from 271da2c4bfb4
 ```
 ![Dockerfile Build](https://training.play-with-docker.com/images/ops-images-dockerfile.svg)
@@ -164,7 +164,7 @@ L'applicazione è un semplice file _JavaScript_ che stampa a video un _hello wor
 
 Cosa accade se eseguimo il container passandogli un'istruzione come parametro?
 ```bash
-bom@princesspenny ~ $ docker container run hello:v0.1 echo hello world
+bombo82@nolok ~ $ docker container run hello:v0.1 echo hello world
 hello world
 ```
 __ATTENZIONE:__ quando lanciamo un container passandogli un comando da eseguire, esso andrà a sovrascrivere l'istruzione __CMD__ definita nel Dockerfile.
@@ -176,7 +176,7 @@ Alcune istruzioni eseguono anche un _commit_ del layer che creano, mentre altre 
 
 Possiamo utilizzare il comando _history_ per visualizzare tutti i layer che compongono un'immagine, come nell'esempio sotto:
 ```bash
-bom@princesspenny ~ $docker image history hello:v0.1
+bombo82@nolok ~ $docker image history hello:v0.1
 IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
 953fc4730149        8 seconds ago       /bin/sh -c #(nop)  CMD ["node" "index.js"]      0B                  
 83cc031eceea        8 seconds ago       /bin/sh -c #(nop) WORKDIR /app                  0B                  
@@ -190,8 +190,8 @@ Non tutti i layer creati durante la build vengono committati, alcuni sono tempor
 
 Proviamo a modificare il nostro _index.js_ e vediamo come questo influisce sui layer della nostra immagine.
 ```bash
-bom@princesspenny ~ $ echo "console.log(\"this is v0.2\");" >> index.js
-bom@princesspenny ~ $ docker image build -t hello:v0.2 .
+bombo82@nolok ~ $ echo "console.log(\"this is v0.2\");" >> index.js
+bombo82@nolok ~ $ docker image build -t hello:v0.2 .
 Sending build context to Docker daemon   16.9kB
 Step 1/5 : FROM alpine
  ---> 3fd9065eaf02
