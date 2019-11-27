@@ -14,7 +14,7 @@ In pratica dobbiamo rispettare le seguenti regole:
 * NON modificare i file di configurazione (interni al container)
 * NON modificare il codice dell'applicazione
 
-__Neanche _Vulnerabilità di Sicurezza_, _piccoli bugfix_ o _Urgenti fix a bug bloccanti_ sono delle motivazioni valide per andare contro a questo principio.__
+__Neanche _Vulnerabilità di Sicurezza_, _piccoli bugfix_ o _Urgenti fix a bug bloccanti_ sono delle motivazioni valide per andare contro questo principio.__
 
 Le motivazioni? Le trovate in questa presentazione fatta da Jérôme Petazzoni
 [Immutable infrastructure with Docker and containers (GlueCon 2015)](https://www.slideshare.net/jpetazzo/immutable-infrastructure-with-docker-and-containers-gluecon-2015)
@@ -38,6 +38,7 @@ In generale, è buona norma avere solo il minimo necessario per eseguire l'appli
 Questo è un elenco di buone pratiche valido per creare dei Dockerfile efficienti:
 * usare .dockerignore per escludere i file e le directory che non ci servono all'interno del container, ma senza sconvolgere la struttura del repository dei sorgenti
 * non installare pacchetti del sistema operativo non necessari
+* rimuovere eventuali cache interne al container e.g. quelle generate dai gestori dei pacchetti (apt, yum, etc.)
 * minimizzare il numero di layer. Le istruzioni __RUN__, __COPY__ e __ADD__ committano il layer creato, mentre i layer creati dalle altre istruzioni sono temporanei
 * suddividere i comandi inseriti nei __RUN__ su più righe e ordinarli alfabeticamente (ove possibile). Questo piccolo accorgimento rende più ordinato il Dockerfile e ci aiuta a identificare le duplicazioni del codice
 * ordinare i comandi dal più generico a quello più specifico... questo ci permette di sfruttare la cache e riusare i layer tra differenti immagini
@@ -46,7 +47,7 @@ Questo è un elenco di buone pratiche valido per creare dei Dockerfile efficient
 ### ADD vs COPY
 Il funzionamento è molto simile e in generale è preferibile usare __COPY__, perché ha un comportamento più trasparente rispetto all'istruzione __ADD__.
 __COPY__ permette solamente di copiare file o directory locali all'interno dell'immagine; mentre, __ADD__ ha delle funzionalità aggiuntive quali decomprimere archivi compressi e il supporto agli URL remoti.
-Queste funzionalità aggiuntive dell'istruzione __ADD__ la rendono poco immediata e a volte il risultato atteso è differente da quello reale... soprattutto all'inizio!
+Queste funzionalità aggiuntive, rendono l'istruzione __ADD__ molto potente, ma diventa poco immediata e a volte il risultato atteso è differente da quello reale... soprattutto all'inizio!
 
 Quando più passi nel Dockerfile utilizzano file diversi copiati dell'esterno, è preferibile copiarli singolarmente con __COPY__, piuttosto che copiare tutta la directory o un archivio.
 Ciò garantisce che la cache dei layer per ogni passaggio sia invalidata (forzando la fase di riesecuzione) se i file specificatamente richiesti cambiano e non se cambia uno qualsiasi dei file contenuti nella directory.
@@ -73,7 +74,7 @@ Le due istruzioni hanno un significato e un comportamento completamente differen
 
 #### CMD
 Ha tre differenti forme sintattiche (andiamo bene):
-1. __CMD ["executable","param1","param2"]__ _exec form, this is the preferred form_
+1. __CMD ["executable","param1","param2"]__ _exec form_
 2. __CMD ["param1","param2"]__ _as default parameters to ENTRYPOINT_
 3. __CMD command param1 param2__ _shell form_
 
@@ -104,7 +105,10 @@ Removing intermediate container 8fa43310dd31
  ---> 68f69729a39d
 Successfully built 68f69729a39d
 Successfully tagged ping:cmd
+```
 
+Proviamo ad eseguire il container senza passare un comando esterno:
+```bash
 bom@princesspenny ~ $ docker container run ping:cmd
 PING localhost (127.0.0.1): 56 data bytes
 64 bytes from 127.0.0.1: seq=0 ttl=64 time=0.043 ms
@@ -113,7 +117,10 @@ PING localhost (127.0.0.1): 56 data bytes
 --- localhost ping statistics ---
 2 packets transmitted, 2 packets received, 0% packet loss
 round-trip min/avg/max = 0.043/0.050/0.058 ms
+```
 
+Come ci aspettavamo è stato eseguito il comando _ping_ verso l'host _localhost_. Ora proviamo a passare alcuni comandi e vediamo cosa accade:
+```bash
 bom@princesspenny ~ $ docker container run ping:cmd ping www.google.it
 PING www.google.it (172.217.19.131): 56 data bytes
 64 bytes from 172.217.19.131: seq=0 ttl=52 time=30.429 ms
@@ -144,6 +151,8 @@ drwxr-xr-x   11 root     root          4096 Jan  9 19:37 var
 
 ```
 
+Il _container_ esegue i comandi passati al posto di quello inserito nel dockerfile, purché i relativi eseguibili siano installati all'interno del _container_, potremmo anche installare nuovo software malevolo!!!.
+
 #### ENTRYPOINT
 Ha solo due differenti forme:
 * __ENTRYPOINT ["executable", "param1", "param2"]__ _exec form, preferred_
@@ -155,7 +164,7 @@ Potremmo dire che ___ENTRYPOINT__ rende un container un file eseguibile_ e in re
 L'istruzione __ENTRYPOINT__ viene utilizzata principalmente per inizializzare il container ed eseguire delle applicazioni come se fossero dei servizi.
 Le immagini docker ufficiali di _redis_, _postgres_, _mongo_ e molte altre, utilizzano proprio un __ENTRYPOINT__ con uno specifico script di inizializzazione per avviare il servizio e __CMD__ per definire dei parametri di default.
 
-Tramite _docker container run_ possiamo passare dei parametri che verranno concatenati a quelli presenti nell'istruzione __ENTRYPOINT__, ma non possiamo passare un comando eseguibile.
+Tramite _docker container run_ possiamo passare dei parametri che verranno concatenati a quelli presenti nell'istruzione __ENTRYPOINT__, ma non possiamo fare un "_overrride_" del comando da eseguire.
 ```dockerfile
 FROM alpine
 ENTRYPOINT ["ping", "localhost"]
@@ -172,7 +181,10 @@ Removing intermediate container 93dcade74014
  ---> aba6a34d6b74
 Successfully built aba6a34d6b74
 Successfully tagged ping:entrypoint
+```
 
+Proviamo ad eseguire il container senza passare un comando esterno:
+```bash
 bom@princesspenny ~ $ docker container run ping:entrypoint
 PING localhost (127.0.0.1): 56 data bytes
 64 bytes from 127.0.0.1: seq=0 ttl=64 time=0.048 ms
@@ -181,7 +193,10 @@ PING localhost (127.0.0.1): 56 data bytes
 --- localhost ping statistics ---
 2 packets transmitted, 2 packets received, 0% packet loss
 round-trip min/avg/max = 0.048/0.048/0.049 ms
+```
 
+Come vi aspettavamo è stato eseguito il comando _ping_ verso l'host _localhost_. Ora proviamo a passare alcuni comandi e vediamo cosa accade:
+```bash
 bom@princesspenny ~ $ docker container run ping:entrypoint ls -l
 ping: unrecognized option: l
 BusyBox v1.27.2 (2017-12-12 10:41:50 GMT) multi-call binary.
@@ -203,11 +218,14 @@ Send ICMP ECHO_REQUEST packets to network hosts
                         and when finished
         -p              Pattern to use for payload
 ```
+
+In questo caso otteniamo un errore! Il _CMD_ passato dall'esterno viene utilizzato come parametri aggiuntivi per il comando definito dal _ENTRYPOINT_, quindi non è possibile eseguire comandi arbitrari passati dall'esterno.
+
 #### Combinare ENTRYPOINT e CMD
 Come diretta conseguenza di quanto detto sopra potremmo combinare __ENTRYPOINT__ e __CMD__.
 L'istruzione __ENTRYPOINT__  è utilizzabile per definire l'eseguibile da lanciare all'interno del container e tramite __CMD__ e _docker container run_ possiamo passare i parametri necessari alla sua esecuzione.
 
-Tornando all'esempio del ping, definiamo il seguente Dockerfile
+Tornando all'esempio del ping, definiamo il seguente Dockerfile:
 ```dockerfile
 FROM alpine
 ENTRYPOINT ["ping", "-c", "3"]
@@ -228,7 +246,10 @@ Removing intermediate container 9792f87ff5b8
  ---> 558d5fcd22ca
 Successfully built 558d5fcd22ca
 Successfully tagged ping:combined
+```
 
+Proviamo ad eseguire il container senza passare un comando esterno:
+```bash
 bom@princesspenny ~ $ docker container run ping:combined
 PING localhost (127.0.0.1): 56 data bytes
 64 bytes from 127.0.0.1: seq=0 ttl=64 time=0.047 ms
@@ -238,7 +259,10 @@ PING localhost (127.0.0.1): 56 data bytes
 --- localhost ping statistics ---
 3 packets transmitted, 3 packets received, 0% packet loss
 round-trip min/avg/max = 0.047/0.054/0.059 ms
+```
 
+Niente di nuovo, continua a funzionare tutto come in precedenza! Ora passiamo un nome host differente come parametro.
+```bash
 bom@princesspenny ~ $ docker container run ping:combined www.google.it
 PING www.google.it (172.217.19.131): 56 data bytes
 64 bytes from 172.217.19.131: seq=0 ttl=52 time=29.998 ms
@@ -248,8 +272,13 @@ PING www.google.it (172.217.19.131): 56 data bytes
 --- www.google.it ping statistics ---
 3 packets transmitted, 3 packets received, 0% packet loss
 round-trip min/avg/max = 29.385/29.716/29.998 ms
+```
 
-bom@princesspenny ~ $ docker container run ping:combined ls -lping: unrecognized option: l
+Avendo combinato **ENTRYPOINT** con **CMD** possiamo lanciare il container con alcuni parametri che andranno a sovrascrivere il contenuto del **CMD**, oppure senza parametri e verranno utilizzati quelli di default definiti dall'istruzione **CMD**.
+Se ora proviamo a lanciare il container con un comando arbitrario, esso verrà interpretato come parametro del **ENTRYPOINT** che abbiamo definito, con il risultato che ci sarà restituito un errore!
+```bash
+bom@princesspenny ~ $ docker container run ping:combined ls -l
+ping: unrecognized option: l
 BusyBox v1.27.2 (2017-12-12 10:41:50 GMT) multi-call binary.
 
 Usage: ping [OPTIONS] HOST
@@ -269,6 +298,15 @@ Send ICMP ECHO_REQUEST packets to network hosts
                         and when finished
         -p              Pattern to use for payload
 ```
+
+#### Conclusioni
+Abbiamo scoperto che **ENTRYPOINT** e **CMD** sono due istruzioni differenti, anche se potrebbero venir confuse e utilizzate in modo improprio!
+Purtroppo questa confusione è dovuta ai nomi delle due istruzioni e alla possibilità di usare entrambe per lanciare un comando, anche se il modo migliore di utilizzarle è proprio quello di combinarle tra loro.
+
+In conclusione, dovremmo utilizzarle nel seguente modo:
+- **ENTRYPOINT:** definire l'istruzione da eseguire all'avvio del _container_ comprensiva degli eventuali parametri obbligatori che non vogliamo esporre all'estreno del _container_;
+- **CMD:** fornire i valori di default per i parametri opzionali, che potranno essere sovrascritti all'avvio del _container_ al momento dell'avvio dello stesso.
+
 ___
 
 [prev](../module03/README.md) [home](../README.md) [next](../module05/README.md)
