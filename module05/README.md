@@ -13,7 +13,8 @@ http://docker-saigon.github.io/img/event_state.png
 OOOOOK, il diagramma sopra è piena d'informazioni e risulta un po' complicata, almeno per il taglio di questo workshop! L'ho riportata giusto per completezza.
 
 Qui sotto ho messo una vesrione semplificata e credo che contenga tutti i concetti utili per un workshop introduttivo.
-![event state semplificato]()
+
+![event state semplificato](event-state-semplified.png)
 
 ### create
 Il comando __create__ crea un nuovo _container_ basato sulla _image_ che volete! ma non si limita a fare solo questo...
