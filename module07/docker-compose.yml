@@ -1,0 +1,53 @@
+version: '3'
+services:
+  reverse-proxy:
+    image: traefik
+    command: --api.insecure=true --providers.docker --providers.docker.exposedByDefault=false
+    restart: on-failure
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - redis-commander
+      - mongo-express
+
+  redis:
+    image: redis:alpine
+    restart: on-failure
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: on-failure
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.redis-commander.rule=Host(`redis-commander.localhost`)"
+    depends_on:
+      - redis
+
+  mongo:
+    image: mongo
+    restart: on-failure
+    volumes:
+      - mongo_volume:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: on-failure
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mongo-express.rule=Host(`mongo-express.localhost`)"
+    depends_on:
+      - mongo
+
+volumes:
+  mongo_volume:
