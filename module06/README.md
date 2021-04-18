@@ -138,7 +138,7 @@ Stopping module06_mongo_1         ... done
 
 ### Aggiornare i servizi
 L'unico comando di _Compose_ che aggiorna i servizi/container è `docker-compose pull`. Nessun altro comando controlla se
-esistono versioni più recenti delle immagini e tantomeno scaricano le versioni più aggiornate... nessuno "side-effect"
+esistono versioni più recenti delle immagini e tantomeno scaricano le versioni più aggiornate... nessun "side-effect"
  e nessuna sorpresa legati agli aggiornamenti dei servizi. 
 
 ```bash
@@ -148,7 +148,7 @@ Pulling mongo-express ... done
 ```
 
 ### Fermare i servizi
-È possibile fermare i servizi precedentemente avviati in modalità _detach_ utilizzando il comando `docker-compose stop`.
+È possibile fermare i servizi precedentemente avviati utilizzando il comando `docker-compose stop`.
 Esso si limita a fermare i container senza cancellare alcun dato o configurazione. Questo comando lascia i container,
 le immagini, i volumi e persino la configurazione delle network.  
 
@@ -158,9 +158,10 @@ Stopping module06_mongo-express_1 ... done
 Stopping module06_mongo_1         ... done
 ```
 
-### Rimuovere i servizi
-Il comando `docker-compose down` ferma i servizi e distrugge tutti i dati e le configurazioni a essi associati!
-Utilizzatelo con cautela perché esso rimuove i container, i volumi e le configurazioni delle network.
+In alternativa, possiamo utilizzare il comando `docker-compose down`. Esso ferma i servizi e distrugge tutti i container
+e le network a essi associati! L'unica cosa che lascia intatta sono i volumi associati, quindi non vi è perdita di dati.
+Possiamo utilizzare l'opzione `--volumes` per rimuovere anche i volumi associati ai container, utilizzate questa opzione
+con cautela perché comporta la perdita dei dati!
 
 ```bash
 gianni@nolok ~/workspace/projects/workshop-docker/module06 $ docker-compose down

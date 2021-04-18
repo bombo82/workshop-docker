@@ -14,7 +14,7 @@ Concetti in questo modulo:
 ## Definizione dei servizi
 I servizi sono definiti come una mappa all'interno di un file chiamato `docker-compose.yml`. Per ogni servizio viene
 definita una chiave che lo identifica in modo univoco all'interno della composizione. È possibile inserire più volte la
-stessa chiave e in questo coas _Compose_ crea un solo servizio i cui attributi saranno l'unione degli attributi definiti
+stessa chiave e in questo caso _Compose_ crea un solo servizio i cui attributi saranno l'unione degli attributi definiti
 dalla singola chiave. Associamo ad ogni chiave una lista di attributi che definisco il servizio in questione.
 
 ```yaml
@@ -44,7 +44,7 @@ attributi _image_, _restart_ ed _environment_. I primi 2 attributi contengono un
 _environment_ contiene una mappa di valori.
 
 Ogni servizio ha l'attributo _image_ che indica l'immagine da cui creare il container e, come alternativa, potremmo fare
-la build di un'immagine da `Dockerfile` direttamente tramite _Compose_. Questa alternative dovrebbe essere utilizzata
+la build di un'immagine da `Dockerfile` direttamente tramite _Compose_. Questa alternativa dovrebbe essere utilizzata
 solo in fase di sviluppo per rendere più rapido il processo di sviluppo e test, mentre per gli ambienti di test e
 produzione dovremmo sempre utilizzare immagini già costruite e presenti su un _artefactory_,
 
@@ -76,12 +76,12 @@ distribuite tra più nodi e con load-balancer.
 
 ## Variabili d'ambiente
 In _Compose_ possono essere definite le variabili d'ambiente da passare ai servizi quando vengono avviati. Questo
-sistema è molto utili per rendere dinamiche le configurazioni e riutilizzare sia le immagini sia i file 
+sistema è molto utile per rendere dinamiche le configurazioni e riutilizzare sia le immagini sia i file 
 `docker-compose.yml`.
-Tramite l'attributo "_environment_" possiamo definire una mappa di valori da passare al container al momento del "run".
-Una caratteristicha molto potente di _Compose_ è che possiamo utilizzare le variabili d'ambiente del terminale in cui
-viene eseguito il comando `docker-compose` all'interno del file. Di seguito un esempio di configurazione delle variabili
-d'ambiente:
+Tramite l'attributo "_environment_" possiamo definire una mappa di valori da passare al container al momento del suo
+"run". Una caratteristicha molto potente di _Compose_ è che possiamo utilizzare le variabili d'ambiente del terminale in
+cui viene eseguito il comando `docker-compose` all'interno del file. Di seguito un esempio di configurazione delle
+variabili d'ambiente:
 
 ```yaml
     environment:
@@ -92,7 +92,7 @@ d'ambiente:
 
 > **ATTENZIONE:** poter utilizzare le variabili definite per il terminale è molto potente e spesso molto utile, ma rende
 >difficile comprendere quale valore hanno tali variabili. Il mio consiglio è di utilizzare il meno possibile le
->variabili d'ambiente del terminale e definirle a livello di `docker-compose` magari creando file di environement
+>variabili d'ambiente del terminale e definirle a livello di `docker-compose`, magari creando file di environement
 >specifici per ogni ambiente.
 
 ## Passare parametri al container
@@ -123,10 +123,10 @@ lista di stringhe.
 
 ### Bind mount
 Nell'esempio sotto ho utilizzato _volumes_ per effettuare il `bind mount` del file `/var/run/docker.sock` all'interno
-del servizio reverse-proxy. Il file `/var/run/docker.sock` è il socket (uno stream dati) utilizzato da _Docker_
-praticamente per effettuare ogni operazione! i comandi `docker` e `docker-compose` inviano alla _docker-engine_ i
-comandi e i dati tramite quel file e la _docker-engine_ utilizza quel file per pubblicare eventi relativi al sistema.
-In pratica, abbiamo reso accessibile ed esposto tutto _docker_ a un container!
+del servizio reverse-proxy. Il file `/var/run/docker.sock` è il socket (uno stream dati) utilizzato da _Docker_.
+I comandi `docker` e `docker-compose` inviano alla _docker-engine_ i comandi e i dati tramite quel socket/file e la
+_docker-engine_ utilizza quel file per pubblicare eventi relativi al sistema.
+In pratica, abbiamo reso accessibile ed esposto tutto _docker_ a un singolo container!
 
 ```yaml
   reverse-proxy:
@@ -140,13 +140,13 @@ In pratica, abbiamo reso accessibile ed esposto tutto _docker_ a un container!
       - /var/run/docker.sock:/var/run/docker.sock
 ```
 
-> **ATTENZIONE:** Questa operazione implica parecchie cose a livello di sicurezza e introduce possibili falle enormi,]
+> **ATTENZIONE:** Questa operazione implica parecchie cose a livello di sicurezza e introduce possibili falle enormi,
 >quindi fa fatta con molta cautela e a ragion veduta!
 
 ### Volume
-La gestione dei volumi interni a _Compose_ richiede la scrittura di qualche riga in più perché, oltre a configurare il
-volume nel servizio `mongo_volume:/data/db` è necessario dichiarare il volume `mongo_volume` all'interno. Nell'esempio
-sotto è definito un volume (ultime 2 righe) e utilizzato nel servizio _mongo_.
+La gestione dei volumi interni a _Compose_ richiede la scrittura di qualche riga in più, perché dobbiamo configurare il
+volume nel servizio `mongo_volume:/data/db` e dichiarare il volume `mongo_volume` all'interno del _Compose_.
+Nell'esempio sotto è definito un volume (ultime 2 righe) e utilizzato nel servizio _mongo_.
 
 ```yaml
 services:
@@ -188,7 +188,7 @@ mongo-express (quando la loro dipendenza è avviata) e infine reverse-proxy (qua
 contemporanea), infine redis e mongo (quando le rispettive dipendenze sono ferme).
 
 ## Labels
-L'attributo "_labels_" permette di definire delle etichetti, dei meta-data. Queste _labels_ sono associate al serizio e
+L'attributo "_labels_" permette di definire delle etichette, dei meta-data. Queste _labels_ sono associate al serizio e
 non alle singole istanze di container. Le _label_ non sono utilizzate da Docker, ma esso le rende disponibili a tutti i
 servizi presenti nella composizione. Questo significa che se associamo una _label_ al servizio redis-commander, tale
 _label_ può essere letta e interpretata da un altro servizio e.g. reverse-proxy. Nel nostro esempio le _labels_ sono
