@@ -197,22 +197,23 @@ invece, se viene specificato un servizio, essi agiscono solo su quel servizo e l
 ## Riassunto
 Facciamo un breve riassunto dei comandi e delle opzioni finora utilizzate:
 
- Command | Option | Behavior
----------|--------|----------
-up | | Create and start containers 
-| | -d, --detach | Detached mode
-pull | | Pull service image
-stop | | Stop services
-start | | Start services
-down | | Stop and remove containers, networks, images, and volumes
-top | | Display the running processes
-logs | | View output from containers
-| | -f, --follow | Follow log output
+| Command | Option       | Behavior                                                  |
+|---------|--------------|-----------------------------------------------------------|
+| up      |              | Create and start containers                               |
+|         | -d, --detach | Detached mode                                             |
+| pull    |              | Pull service image                                        |
+| stop    |              | Stop services                                             |
+| start   |              | Start services                                            |
+| down    |              | Stop and remove containers, networks, images, and volumes |
+| top     |              | Display the running processes                             |
+| logs    |              | View output from containers                               |
+|         | -f, --follow | Follow log output                                         |
+
 ___
 
 [prev](../module05/README.md) [home](../README.md) [next](../module07/README.md)
 
-Copyright (C) 2018-2020 Gianni Bombelli and Contributors
+Copyright (C) 2018-2022 Gianni Bombelli and Contributors
 
 [![Image](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 

@@ -207,33 +207,34 @@ Di seguito un elenco di concetti avanzati che non sono trattati in questo worksh
 ## Riassunto
 Facciamo un breve riassunto dei comandi e delle opzioni finora utilizzate:
 
- Command | Option | Behavior
----------|--------|---------
-up | | Create and start containers 
-| | -d, --detach | Detached mode
-pull | | Pull service image
-stop | | Stop services
-start | | Start services
-down | | Stop and remove containers, networks, images, and volumes
-top | | Display the running processes
-logs | | View output from containers
-| | -f, --follow | Follow log output
+| Command | Option       | Behavior                                                  |
+|---------|--------------|-----------------------------------------------------------|
+| up      |              | Create and start containers                               |
+|         | -d, --detach | Detached mode                                             |
+| pull    |              | Pull service image                                        |
+| stop    |              | Stop services                                             |
+| start   |              | Start services                                            |
+| down    |              | Stop and remove containers, networks, images, and volumes |
+| top     |              | Display the running processes                             |
+| logs    |              | View output from containers                               |
+|         | -f, --follow | Follow log output                                         |
 
- Attribute | Type | Default | Description
------------|------|---------|-------------
-image | stringa | | Specifica da quale immagini creare il container
-restart | stringa | "no" | Imposta la politica di riavvio dei servizi.
-ports | lista di stringhe | | Espone e mappa le porte 
-environment | mappa | | Definisce le variabili d'ambiente 
-command | stringa | | Sovrascrive (override) del `CMD` di default dell'immagine definita nel `Dockerfile`
-volumes | lista di stringhe o oggetti | | 
-depends_on | lista di stringhe | | Dichiarazione delle dipendenze del servizio
-labels | mappa | | Definisce una mappa di etichetti (meta-data) non usati da docker, ma esposti per essere utilizzati da altri servizi
+| Attribute   | Type                        | Default | Description                                                                                                         |
+|-------------|-----------------------------|---------|---------------------------------------------------------------------------------------------------------------------|
+| image       | stringa                     |         | Specifica da quale immagini creare il container                                                                     |
+| restart     | stringa                     | "no"    | Imposta la politica di riavvio dei servizi.                                                                         |
+| ports       | lista di stringhe           |         | Espone e mappa le porte                                                                                             |
+| environment | mappa                       |         | Definisce le variabili d'ambiente                                                                                   |
+| command     | stringa                     |         | Sovrascrive (override) del `CMD` di default dell'immagine definita nel `Dockerfile`                                 |
+| volumes     | lista di stringhe o oggetti |         |                                                                                                                     |
+| depends_on  | lista di stringhe           |         | Dichiarazione delle dipendenze del servizio                                                                         |
+| labels      | mappa                       |         | Definisce una mappa di etichetti (meta-data) non usati da docker, ma esposti per essere utilizzati da altri servizi |
+
 ___
 
 [prev](../module06/README.md) [home](../README.md)
 
-Copyright (C) 2018-2020 Gianni Bombelli and Contributors
+Copyright (C) 2018-2022 Gianni Bombelli and Contributors
 
 [![Image](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 

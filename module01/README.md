@@ -239,32 +239,32 @@ In questo modulo abbiamo visto i comandi:
 * _exec_: esegue un comando all'interno del container specificato
 * _start_: avvia un container attualmente fermo
 
-Nel [Modulo 5](./module04/README.md), vedremo nel dettaglio cosa fanno e le differenze tra i tre comandi.
+Nel [Modulo 5](../module05/README.md), vedremo nel dettaglio cosa fanno e le differenze tra i tre comandi.
 Al momento ci mancano alcune nozioni per comprendere a fondo il loro comportamento.
 
 ## Riassunto
 Facciamo un breve riassunto dei comandi e delle opzioni finora utilizzate:
 
-Management Command | Command | Option | Behavior
--------------------|---------|--------|---------
-image | pull | | Pull an image or a repository from a registry
-image | ls | | List images
-container | run | | Run a command in a new container
-| | | -i, --interactive | Keep STDIN open even if not attached 
-| | | -t, --tty | Allocate a pseudo-TTY
-container | exec | | Run a command in a running container
-| | | -i, --interactive | Keep STDIN open even if not attached 
-| | | -t, --tty | Allocate a pseudo-TTY
-container | start | | Start one or more stopped containers
-container | stop | | Stop one or more running containers
-container | ls | | List running containers
-| | | -a, --all | Show all containers (default shows just running)
+| Management Command | Command | Option            | Behavior                                         |
+|--------------------|---------|-------------------|--------------------------------------------------|
+| image              | pull    |                   | Pull an image or a repository from a registry    |
+| image              | ls      |                   | List images                                      |
+| container          | run     |                   | Run a command in a new container                 |
+|                    |         | -i, --interactive | Keep STDIN open even if not attached             |
+|                    |         | -t, --tty         | Allocate a pseudo-TTY                            |
+| container          | exec    |                   | Run a command in a running container             |
+|                    |         | -i, --interactive | Keep STDIN open even if not attached             |
+|                    |         | -t, --tty         | Allocate a pseudo-TTY                            |
+| container          | start   |                   | Start one or more stopped containers             |
+| container          | stop    |                   | Stop one or more running containers              |
+| container          | ls      |                   | List running containers                          |
+|                    |         | -a, --all         | Show all containers (default shows just running) |
 
 ___
 
 [home](../README.md) [next](../module02/README.md)
 
-Copyright (C) 2018-2019 Gianni Bombelli and Contributors
+Copyright (C) 2018-2022 Gianni Bombelli and Contributors
 
 [![Image](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 

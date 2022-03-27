@@ -22,7 +22,7 @@ CMD ["python", "app.py"]
 E' sconsigliato usare __ADD__ per scaricare file da URL remoti perché è poco efficiente, piuttosto usa curl o wget.
 ```dockerfile
 RUN mkdir -p /usr/src/things \
-    && curl -SL http://example.com/big.tar.xz \
+    && curl -SL https://example.com/big.tar.xz \
     | tar -xJC /usr/src/things \
     && make -C /usr/src/things all
 ```
@@ -270,7 +270,7 @@ ___
 
 [prev](../module04.1/README.md)  [home](../../README.md) [up](../README.md)  [next](../module04.3/README.md)
 
-Copyright (C) 2018-2019 Gianni Bombelli and Contributors
+Copyright (C) 2018-2022 Gianni Bombelli and Contributors
 
 [![Image](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 

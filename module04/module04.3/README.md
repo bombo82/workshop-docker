@@ -10,7 +10,7 @@ Ho identificato le seguenti aree su cui intervenire: build time incrementale, di
 ```dockerfile
 FROM centos
 
-COPY ../_drafts /app
+COPY . /app
 
 RUN yum -y update
 RUN yum -y install java-11-openjdk openssh vim
@@ -40,7 +40,8 @@ COPY . /app
 CMD ["java", "-jar", "/app/target/app-x.y.z.jar"]
 ```
 
-Nell'esempio sopra abbiamo spostato l'istruzione di **COPY** dopo quelle che installano Java, questo perché la frequenza con cui aggiorneremo la nostra applicazione è superiore a quella con cui viene aggiornato Java e gli altri pacchetti del sistema operativo. 
+Nell'esempio sopra abbiamo spostato l'istruzione di **COPY** dopo quelle che installano Java, questo perché la frequenza con cui aggiorneremo la nostra codebase è superiore a quella con cui viene aggiornato Java e gli altri pacchetti del sistema operativo. 
+
 ### Tip 2: copia solo quello che serve
 Copia all'interno dell'immagine solo quello che serve! L'affermazione ha due differenti risvolti: 1. riduzione della dimensione delle immagini, 2. la cache viene invalidata solo quando serve.
 Se copiamo un'intera cartella, qualsiasi modifica a uno dei file presente in quella cartella invalida la cache; mentre, se copiamo solo i file che realmente ci servono, la cache viene invalidata solo quando uno dei _file utili_ cambia.
@@ -51,13 +52,12 @@ FROM centos
 RUN yum -y update
 RUN yum -y install java-11-openjdk openssh vim
 
-WORKDIR /app
 COPY target/app-x.y.z.jar /app
 
 CMD ["java", "-jar", "/app/app-x.y.z.jar"]
 ```
 
-Nell'esempio sopra ci serve solo il file `target/app-x.y.z.jar`, quindi copiamo solo quel file, anziché tutto il contenuto della cartella padre.
+Nell'esempio ci serve solo il file `target/app-x.y.z.jar`, quindi copiamo solo quel file, anziché tutto il contenuto della cartella padre.
 
 ### Tip 3: identificare e raggruppare le _unità_ cacheable
 Ogni istruzione **RUN** crea un layer intermedio e lo inserisce nella cache.
@@ -69,7 +69,6 @@ FROM centos
 RUN yum -y update \
     && yum -y install java-11-openjdk openssh vim
 
-WORKDIR /app
 COPY target/app-x.y.z.jar /app
 
 CMD ["java", "-jar", "/app/app-x.y.z.jar"]
@@ -93,7 +92,6 @@ FROM centos
 RUN yum -y update \
     && yum -y install java-11-openjdk
 
-WORKDIR /app
 COPY target/app-x.y.z.jar /app
 
 CMD ["java", "-jar", "/app/app-x.y.z.jar"]
@@ -114,7 +112,6 @@ RUN yum -y update \
     && yum -y install java-11-openjdk \
     && yum -y clean all
 
-WORKDIR /app
 COPY target/app-x.y.z.jar /app
 
 CMD ["java", "-jar", "/app/app-x.y.z.jar"]
@@ -139,7 +136,6 @@ Risparmiamo tempo e probabilmente l'immagine ha una qualità più alta di quella
 ```dockerfile
 FROM openjdk
 
-WORKDIR /app
 COPY target/app-x.y.z.jar /app
 
 CMD ["java", "-jar", "/app/app-x.y.z.jar"]
@@ -149,13 +145,12 @@ Perfetto con il refactor di questo tip abbiamo praticamente buttato 2/3 dei refa
 Solitamente le immagini ufficiali sono di qualità e adottano le migliori best practices, quindi dovrebbero rispettare tutti i consigli che ti ho dato fino a ora. 
 
 ### Tip 7: usa tag specifici
-Ricorda che quando non specifichi il tag docker suppone che tu voglia usare l'ultima versione, quella con tag _latest_.
+Ricorda che quando non specifichi il tag, docker suppone che tu voglia usare l'ultima versione, quella con tag _latest_.
 Potresti anche voler utilizzare l'ultima versione attualmente disponibile (oggi per Java è la 13), ma ti consiglio vivamente di mettere il tag della versione, altrimenti un giorno ti potresti ritrovare la successiva _major release_ e non capire perché non va più nulla!
 
 ```dockerfile
 FROM openjdk:11-jre
 
-WORKDIR /app
 COPY target/app-x.y.z.jar /app
 
 CMD ["java", "-jar", "/app/app-x.y.z.jar"]
@@ -189,8 +184,6 @@ ARG JAVA_TAG
 FROM openjdk:${JAVA_TAG}
 
 ARG VERSION
-
-WORKDIR /app
 COPY target/app-${VERSION}.jar /app/app.jar
 
 CMD ["java", "-jar", "/app/app.jar"]
@@ -236,7 +229,7 @@ ___
 
 [prev](../module04.2/README.md)  [home](../../README.md) [up](../README.md)
 
-Copyright (C) 2018-2019 Gianni Bombelli and Contributors
+Copyright (C) 2018-2022 Gianni Bombelli and Contributors
 
 [![Image](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 

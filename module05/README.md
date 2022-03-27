@@ -63,9 +63,9 @@ Esistono due comandi:
 * _docker container stats_ : mostra le statistiche delle risorse utilizzate da tutti i _container_ in esecuzione
 * _docker container top_ : mostra i processi in esecuzione all'interno del _container_
 
-Tramite il comando `docker ps` siamo in grado di vedere i _container_ che sono stati creati e il loro stato.
+Tramite il comando `docker container ps` siamo in grado di vedere i _container_ che sono stati creati e il loro stato.
 ```bash
-bombo82@nolok ~ $ docker ps -a
+bombo82@nolok ~ $ docker container ps -a
 CONTAINER ID        IMAGE                          COMMAND                  CREATED             STATUS                     PORTS               NAMES
 d15ba079e337        nginx                          "nginx -g 'daemon of…"   4 minutes ago       Up 4 minutes               80/tcp              vigorous_gates
 edf44932644f        hello-http-configurable:v0.1   "nginx -g 'daemon of…"   4 minutes ago       Up 4 minutes               80/tcp, 443/tcp     adoring_tereshkova
@@ -73,9 +73,9 @@ edf44932644f        hello-http-configurable:v0.1   "nginx -g 'daemon of…"   4 
 7d814b8c44ac        hello-http-configurable:v0.1   "nginx -g 'daemon of…"   4 minutes ago       Exited (0) 4 minutes ago                       eloquent_turing
 ```
 
-Tramite il comando `docker stats` è possibile monitorare lo stato dei nostri container. Il comando mostra le statistiche delle risorse utilizzate da tutti i _container_ in esecuzione e, a differenza degli altri comandi fin qui utilizzati, rimane in _"watch"_, cioè il comando blocca il nostro terminale e i dati che ci mostra vengono aggiornati in automatico ogni _n_ secondi.
+Tramite il comando `docker container stats` è possibile monitorare lo stato dei nostri container. Il comando mostra le statistiche delle risorse utilizzate da tutti i _container_ in esecuzione e, a differenza degli altri comandi fin qui utilizzati, rimane in _"watch"_, cioè il comando blocca il nostro terminale e i dati che ci mostra vengono aggiornati in automatico ogni _n_ secondi.
 ```bash
-bombo82@nolok ~ $ docker stats
+bombo82@nolok ~ $ docker container stats
 
 CONTAINER ID        NAME                 CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
 d15ba079e337        vigorous_gates       0.00%               3.285MiB / 15.32GiB   0.02%               2.61kB / 432B       31.7kB / 0B         2
@@ -84,7 +84,7 @@ edf44932644f        adoring_tereshkova   0.00%               2.859MiB / 15.32GiB
 
 Un comando molto utili per comprendere cosa sia in esecuzione all'interno del conrainer è il comando `docker top` che sostanzialmente ci nmostra i processi in esecuzione, esattamente come se avessimo eseguito il comando linux all'intreno del _container_ stesso..
 ```bash
-bombo82@nolok ~ $ docker top edf44932644f
+bombo82@nolok ~ $ docker container top edf44932644f
 UID                 PID                 PPID                C                   STIME               TTY                 TIME                CMD
 root                7406                7381                0                   10:16               ?                   00:00:00            nginx: master process nginx -g daemon off;
 101                 7499                7406                0                   10:16               ?                   00:00:00            nginx: worker process
@@ -95,26 +95,26 @@ Notate come all'interno del _container_ non sia in esecuzione il sistema operati
 ## Riassunto
 Facciamo un breve riassunto dei comandi e delle opzioni finora utilizzate:
 
-Management Command | Command | Option | Behavior
--------------------|---------|--------|---------
-image | pull | | Pull an image or a repository from a registry
-image | ls | | List images
-container | run | | Run a command in a new container
-| | | -i, --interactive | Keep STDIN open even if not attached 
-| | | -t, --tty | Allocate a pseudo-TTY
-container | exec | | Run a command in a running container
-| | | -i, --interactive | Keep STDIN open even if not attached 
-| | | -t, --tty | Allocate a pseudo-TTY
-container | start | | Start one or more stopped containers
-container | stop | | Stop one or more running containers
-container | ls | | List running containers
-| | | -a, --all | Show all containers (default shows just running)
+| Management Command | Command | Option            | Behavior                                         |
+|--------------------|---------|-------------------|--------------------------------------------------|
+| image              | pull    |                   | Pull an image or a repository from a registry    |
+| image              | ls      |                   | List images                                      |
+| container          | run     |                   | Run a command in a new container                 |
+|                    |         | -i, --interactive | Keep STDIN open even if not attached             |
+|                    |         | -t, --tty         | Allocate a pseudo-TTY                            |
+| container          | exec    |                   | Run a command in a running container             |
+|                    |         | -i, --interactive | Keep STDIN open even if not attached             |
+|                    |         | -t, --tty         | Allocate a pseudo-TTY                            |
+| container          | start   |                   | Start one or more stopped containers             |
+| container          | stop    |                   | Stop one or more running containers              |
+| container          | ls      |                   | List running containers                          |
+|                    |         | -a, --all         | Show all containers (default shows just running) |
 
 ___
 
 [prev](../module04/README.md) [home](../README.md) [next](../module06/README.md)
 
-Copyright (C) 2018-2020 Gianni Bombelli and Contributors
+Copyright (C) 2018-2022 Gianni Bombelli and Contributors
 
 [![Image](https://i.creativecommons.org/l/by-sa/4.0/88x31.png)](https://creativecommons.org/licenses/by-sa/4.0/)
 
