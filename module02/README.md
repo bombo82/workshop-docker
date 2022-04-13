@@ -1,4 +1,4 @@
-c# Workshop Docker - Modulo 2
+# Workshop Docker - Modulo 2
 
 Concetti in questo modulo:
 - Creare un'immagine da un container
